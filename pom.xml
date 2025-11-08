@@ -74,6 +74,14 @@
 	<build>
 		<plugins>
 			<plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>3.4.4</version>
+            <configuration>
+                <mainClass>com.RaceReserve.Kartland.KartlandApplication</mainClass>
+            </configuration>
+        </plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
