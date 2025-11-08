@@ -10,8 +10,7 @@ public class KartlandApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(KartlandApplication.class, args);
-		spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-
+		
 		System.out.println("Application Started....");
 		
 	}
