@@ -16,8 +16,16 @@ import com.RaceReserve.Kartland.kartland_service.EmailService;
 
 @RestController
 @RequestMapping("/api/contact")
-@CrossOrigin(origins = "http://localhost:4200","https://targettallyarena.com")
-public class ContactController {
+// @CrossOrigin(origins = "http://localhost:4200","https://targettallyarena.com")
+@CrossOrigin(origins = {
+    "https://targettallyarena.com",
+    "https://www.targettallyarena.com",
+    "http://localhost:4200",
+    "https://kartlandindia.com",
+    "https://www.kartlandindia.com"
+})
+    
+    public class ContactController {
 
     @Autowired
     private EmailService mailService;
