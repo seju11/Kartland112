@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/bookings")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "https://targettallyarena.com")
 public class BookingController {
 
     private final BookingService bookingService;
