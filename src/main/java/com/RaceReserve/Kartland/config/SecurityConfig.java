@@ -15,24 +15,26 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfig {
 
-	    @Bean
-	    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	        http
-	            .csrf().disable()
-	            .httpBasic().disable()
-	            .formLogin().disable()
-	            .logout().disable()
-	            .authorizeHttpRequests()
-	                .requestMatchers("/", "/home", "/index").permitAll()
-	                .requestMatchers("/api/**").permitAll()
-	                .anyRequest().authenticated();
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf().disable() // Disable CSRF for simplicity
+            .cors() // Enable CORS
+            .and()
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                        "/", "/home", "/index", 
+                        "/favicon.ico", "/static/**", "/css/**", "/js/**", "/images/**"
+                ).permitAll() // Public paths
+                .requestMatchers("/api/**").permitAll() // Public API
+                .anyRequest().authenticated() // All other endpoints require auth
+            )
+            .httpBasic(); // Basic auth for protected endpoints
 
-	        return http.build();
-	    }
-
+        return http.build();
+    }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
