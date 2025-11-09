@@ -13,8 +13,16 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/karts")
-@CrossOrigin(origins = "http://localhost:4200","https://targettallyarena.com") // Adjust based on frontend
-public class KartController {
+// @CrossOrigin(origins = "http://localhost:4200","https://targettallyarena.com") // Adjust based on frontend
+@CrossOrigin(origins = {
+    "https://targettallyarena.com",
+    "https://www.targettallyarena.com",
+    "http://localhost:4200",
+    "https://kartlandindia.com",
+    "https://www.kartlandindia.com"
+})
+    
+    public class KartController {
 
     @Autowired
     private KartService kartService;
