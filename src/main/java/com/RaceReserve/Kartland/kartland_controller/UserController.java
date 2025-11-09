@@ -3,7 +3,6 @@ package com.RaceReserve.Kartland.kartland_controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.RaceReserve.Kartland.kartland_entity.Login;
@@ -19,50 +18,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:4200","https://targettallyarena.com")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private EmailService emailService;
+    @Autowired private EmailService emailService;
+    @Autowired private UserService userService;
+    @Autowired private UserRepository userRepository;
+    @Autowired private LoginRepository loginRepository;
+    @Autowired private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private LoginRepository loginRepository;
-
-    // Register a new user
+    // Register user
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
-        // Save user
         userService.save(user);
 
-        // Send registration confirmation email to the user
-        String userSubject = "Welcome to RaceReserve!";
-        String userBody = "Dear " + user.getUsername() + ",\n\nThank you for registering at RaceReserve. Your account is now active.";
+        // Send confirmation to user
+        String userSubject = "Welcome to KartlandIndia!";
+        String userBody = "Dear " + user.getUsername() + ",\n\nThank you for registering at KartlandIndia.";
         emailService.sendEmail(user.getEmail(), userSubject, userBody);
 
-        // Send registration notification email to the owner (you)
-        String ownerEmail = "s3458540@gmail.com"; 
-        String ownerSubject = "New User Registration - RaceReserve";
-        String ownerBody = "A new user has registered on RaceReserve:\n\n"
+        // Notify admin
+        String ownerEmail = "s3458540@gmail.com";
+        String ownerSubject = "New User Registration - KartlandIndia";
+        String ownerBody = "A new user has registered:\n\n"
                 + "Username: " + user.getUsername() + "\n"
                 + "Email: " + user.getEmail() + "\n"
-                + "Contact Number: " + user.getContactNo() + "\n\n"
-                + "Thank you,\nRaceReserve Team";
+                + "Contact: " + user.getContactNo() + "\n\n"
+                + "KartlandIndia System";
         emailService.sendEmail(ownerEmail, ownerSubject, ownerBody);
 
-        return ResponseEntity.ok().body(Map.of("message", "User registered successfully"));
+        return ResponseEntity.ok(Map.of("message", "User registered successfully"));
     }
 
+    // Login
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
         Optional<User> optionalUser = userRepository.findByUsername(request.getUsername());
@@ -73,15 +62,15 @@ public class UserController {
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-
             if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                 loginEntry.setStatus("SUCCESS");
                 loginRepository.save(loginEntry);
 
                 try {
-                    String subject = "Login Notification";
-                    String body = "Dear " + request.getUsername() + ",\n\nYou have successfully logged into your RaceReserve account at " + LocalDateTime.now() + ".";
-                    emailService.sendEmail(user.getEmail(), subject, body);
+                    emailService.sendEmail(user.getEmail(),
+                            "Login Notification",
+                            "Dear " + request.getUsername() +
+                            ",\n\nYou logged into KartlandIndia at " + LocalDateTime.now() + ".");
                 } catch (Exception e) {
                     System.err.println("⚠️ Email failed: " + e.getMessage());
                 }
@@ -98,17 +87,15 @@ public class UserController {
     // Get all users
     @GetMapping("/all")
     public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    // Get user by username
     @GetMapping("/username/{username}")
     public ResponseEntity<Optional<User>> getUserByUsername(@PathVariable String username) {
         Optional<User> user = userService.getUserByUsername(username);
-        if (user.isPresent()) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
+        return user.isPresent()
+                ? ResponseEntity.ok(user)
+                : ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
 }
