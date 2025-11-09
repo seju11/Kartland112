@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/karts")
-@CrossOrigin(origins = "http://localhost:4200") // Adjust based on frontend
+@CrossOrigin(origins = "http://localhost:4200","https://targettallyarena.com") // Adjust based on frontend
 public class KartController {
 
     @Autowired
