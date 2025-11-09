@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@CrossOrigin(origins = "https://kartland112.onrender.com")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
