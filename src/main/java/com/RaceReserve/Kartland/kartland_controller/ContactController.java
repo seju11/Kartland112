@@ -16,7 +16,7 @@ import com.RaceReserve.Kartland.kartland_service.EmailService;
 
 @RestController
 @RequestMapping("/api/contact")
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200","https://targettallyarena.com")
 public class ContactController {
 
     @Autowired
